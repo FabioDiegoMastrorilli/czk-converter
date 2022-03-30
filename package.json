@@ -1,4 +1,5 @@
 {
+  "author": "Fabio Diego Mastrorilli <fdmastrorilli@gmail.com>",
   "name": "momence-test",
   "version": "0.1.0",
   "private": true,
@@ -10,9 +11,13 @@
     "@types/node": "^16.11.26",
     "@types/react": "^17.0.43",
     "@types/react-dom": "^17.0.14",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.3.7",
+    "prettier": "^2.6.1",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-scripts": "5.0.0",
+    "styled-components": "^5.3.5",
     "typescript": "^4.6.3",
     "web-vitals": "^2.1.4"
   },
@@ -38,6 +43,20 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
+    ]
+  },
+  "proxy": "https://www.cnb.cz/",
+  "devDependencies": {
+    "@testing-library/react-hooks": "^7.0.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write"
     ]
   }
 }
