@@ -47,7 +47,8 @@
   },
   "proxy": "https://www.cnb.cz/",
   "devDependencies": {
-    "@testing-library/react-hooks": "^7.0.2"
+    "@testing-library/react-hooks": "^7.0.2",
+    "@types/styled-components": "^5.1.24"
   },
   "husky": {
     "hooks": {
