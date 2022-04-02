@@ -1,36 +1,52 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { ThemeProvider } from "styled-components";
+import AppContext from "./AppContext";
 import Form from "./components/Form";
+import LoadingIndicator from "./components/LoadingIndicator";
+import useDarkMode from "./hooks/useDarkMode";
 import useRate from "./hooks/useRate";
-import theme from "./style/theme";
+import StyledContainer from "./style/components/Container.styled";
+import GlobalStyle from "./style/components/Global.styled";
+import StyledInput from "./style/components/Input.styled";
+import darkTheme from "./style/darkTheme";
+import defaultTheme from "./style/defaultTheme";
+import { Rate } from "./utilities/parser";
 
 function App() {
   const [selectedDate, setSelectedDate] = useState(new Date());
-
-  const { isLoading, error, rates } = useRate(selectedDate);
+  const [selectedCurrency, setSelectedCurrency] = useState<Rate | null>(null);
+  const { failed, loading, rates } = useRate(selectedDate);
+  const darkMode = useDarkMode();
 
   const todayDate = new Date();
 
   return (
-    <ThemeProvider theme={theme}>
-      <div className="App">
-        <label htmlFor="date">Date</label>
+    <AppContext.Provider value={{
+      selectedCurrency,
+      setSelectedCurrency
+    }}>
+      <ThemeProvider theme={darkMode ? darkTheme : defaultTheme}>
+        <GlobalStyle />
 
-        <input
-          id="date"
-          max={todayDate.toISOString().substring(0, 10)}
-          onChange={({ target }) => setSelectedDate(new Date(target.value))}
-          value={selectedDate.toISOString().substring(0, 10)}
-          type="date"
-        />
+        <StyledContainer>
+          <label htmlFor="date">Please select a date</label>
 
-        {isLoading && <div>Loading</div>}
+          <StyledInput
+            id="date"
+            max={todayDate.toISOString().substring(0, 10)}
+            onChange={({ target }) => setSelectedDate(new Date(target.value))}
+            value={selectedDate.toISOString().substring(0, 10)}
+            type="date"
+          />
 
-        {!isLoading && error && <div>{error}</div>}
+          {loading && <LoadingIndicator />}
 
-        {!isLoading && rates && <Form rates={rates} />}
-      </div>
-    </ThemeProvider>
+          {failed && <div>Un expected error occoured</div>}
+
+          {!failed && <Form rates={rates} />}
+        </StyledContainer>
+      </ThemeProvider>
+    </AppContext.Provider>
   );
 }
 

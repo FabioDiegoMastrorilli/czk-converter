@@ -1,6 +1,9 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { DEFAULT_INITIAL_CZK_AMOUNT } from "../utilities/constants";
 import { Rate } from "../utilities/parser";
+import StyledInput from "../style/components/Input.styled";
+import StyledSelect from "../style/components/Select.styled";
+import AppContext from "../AppContext";
 
 function getConvertedValue(
   defaultCurrencyAmount: number,
@@ -15,16 +18,17 @@ function getConvertedValue(
 }
 
 type FormProps = {
-  rates: Rate[];
+  rates?: Rate[];
 };
 
-export default function Form({ rates }: FormProps) {
+export default function Form({ rates = [] }: FormProps) {
   const [czkCurrencyInputValue, setCzkCurrencyInputValue] = useState<string>(
     String(DEFAULT_INITIAL_CZK_AMOUNT)
   );
   const [selectedCurrencyInputValue, setSelectedCurrencyInputValue] =
     useState<string>();
-  const [selectedCurrency, setSelectedCurrency] = useState<Rate | null>(null);
+
+  const {selectedCurrency, setSelectedCurrency} = useContext(AppContext);
 
   function handleSelectChangeEvent({
     target: { value: currencyId },
@@ -69,7 +73,7 @@ export default function Form({ rates }: FormProps) {
 
   return (
     <>
-      <input
+      <StyledInput
         aria-label="CZK amount"
         data-testid="czk-amount"
         onChange={(event) => handleInputChangeEvent(event, "first")}
@@ -78,7 +82,7 @@ export default function Form({ rates }: FormProps) {
         required
       />
 
-      <select
+      <StyledSelect
         aria-label="Selected currency"
         onChange={handleSelectChangeEvent}
         value={selectedCurrency?.currencyId || ""}
@@ -90,9 +94,9 @@ export default function Form({ rates }: FormProps) {
             {`${rate.currencyId} (${rate.countryName})`}
           </option>
         ))}
-      </select>
+      </StyledSelect>
 
-      <input
+      <StyledInput
         aria-label="Selected currency amount"
         data-testid="selected-currency-amount"
         disabled={!selectedCurrency}

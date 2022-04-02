@@ -7,9 +7,9 @@ export type Rate = {
 };
 
 export function parseRawRatesResponse(rawRatesResponse: string) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_useless, _rawHeaders, ...rawRatesDetails] =
-    rawRatesResponse.split(/\r?\n/);
+  const rawRatesDetails = rawRatesResponse.split(/\r?\n/);
+
+  rawRatesDetails.splice(0, 2);
 
   const parsedData: Rate[] = rawRatesDetails.reduce(
     (formattedDetails, rawRateDetails) => {

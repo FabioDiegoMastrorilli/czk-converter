@@ -1,5 +1,10 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { useState } from "react";
+import { ThemeProvider } from "styled-components";
+import AppContext from "../../AppContext";
+import defaultTheme from "../../style/defaultTheme";
 import { DEFAULT_INITIAL_CZK_AMOUNT } from "../../utilities/constants";
+import { Rate } from "../../utilities/parser";
 import Form from "../Form";
 
 const rates = [
@@ -19,19 +24,34 @@ const rates = [
   },
 ];
 
+const FormWrapper = () => {
+  const [selectedCurrency, setSelectedCurrency] = useState<Rate | null>(null);
+
+  return (
+    <AppContext.Provider value={{
+      selectedCurrency,
+      setSelectedCurrency
+    }}>
+      <ThemeProvider theme={defaultTheme}>
+        <Form rates={rates} />
+      </ThemeProvider>
+    </AppContext.Provider>
+  )
+};
+
 describe("Form", () => {
   afterEach(() => {
     cleanup();
   });
 
   it("must render", () => {
-    const { baseElement } = render(<Form rates={rates} />);
+    const { baseElement } = render(<FormWrapper />);
 
     expect(baseElement).toBeInTheDocument();
   });
 
   it("must have the czk input value initially set to a default value", () => {
-    render(<Form rates={rates} />);
+    render(<FormWrapper />);
 
     const czkAmountInput: HTMLInputElement = screen.getByTestId("czk-amount");
 
@@ -39,7 +59,7 @@ describe("Form", () => {
   });
 
   it("must have the currencies select box initially unset", () => {
-    render(<Form rates={rates} />);
+    render(<FormWrapper />);
 
     const currencySelect: HTMLSelectElement = screen.getByRole("combobox");
 
@@ -47,7 +67,7 @@ describe("Form", () => {
   });
 
   it("must have the second input disabled when no currencies are selected", () => {
-    render(<Form rates={rates} />);
+    render(<FormWrapper />);
 
     const selectedCurrencyAmountInput: HTMLInputElement = screen.getByTestId(
       "selected-currency-amount"
@@ -57,7 +77,7 @@ describe("Form", () => {
   });
 
   it("must enable the second input when a currency is selected", () => {
-    render(<Form rates={rates} />);
+    render(<FormWrapper />);
 
     const selectedCurrencyAmountInput: HTMLInputElement = screen.getByTestId(
       "selected-currency-amount"
@@ -71,7 +91,7 @@ describe("Form", () => {
 
   describe("conversion", () => {
     it("must convert the given value", () => {
-      render(<Form rates={rates} />);
+      render(<FormWrapper />);
 
       const selectedCurrencyAmountInput: HTMLInputElement = screen.getByTestId(
         "selected-currency-amount"
@@ -84,7 +104,7 @@ describe("Form", () => {
     });
 
     it("must convert the given value (2)", () => {
-      render(<Form rates={rates} />);
+      render(<FormWrapper />);
 
       const selectedCurrencyAmountInput: HTMLInputElement = screen.getByTestId(
         "selected-currency-amount"
@@ -97,7 +117,7 @@ describe("Form", () => {
     });
 
     it("must convert czeck crowns when a user updates the second input", () => {
-      render(<Form rates={rates} />);
+      render(<FormWrapper />);
 
       const czkAmountInput: HTMLInputElement = screen.getByTestId("czk-amount");
       const selectedCurrencyAmountInput: HTMLInputElement = screen.getByTestId(
