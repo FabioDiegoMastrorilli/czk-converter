@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getData } from "../utilities/apiURL";
+import getData from "../utilities/getData";
 import { Rate } from "../utilities/parser";
 
 export default function useRate(selectedDate: Date) {

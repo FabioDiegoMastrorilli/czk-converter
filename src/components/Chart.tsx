@@ -48,7 +48,6 @@ export default function Chart() {
             backgroundColor: theme.colors.background,
             plugins: {
               tooltip: {
-                backgroundColor: theme.colors.backgroundFocus,
                 titleColor: theme.colors.highlight,
               },
             },

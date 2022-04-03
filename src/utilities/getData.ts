@@ -20,7 +20,7 @@ export function buildRatesApiURL(date: Date) {
   return url.toString();
 }
 
-export async function getData(selectedDate: Date) {
+export default async function getData(selectedDate: Date) {
   const formattedURL = buildRatesApiURL(selectedDate);
 
   const response = await fetch(formattedURL);
@@ -36,10 +36,10 @@ export async function getData(selectedDate: Date) {
   return parseRawRatesResponse(rawRates);
 }
 
-function generateDatesArray(max = 7) {
-  const dates = [];
+export function getLastWeekDates() {
+  const dates = [] as Date[];
 
-  for (let dayCount = 0; dayCount < max; dayCount++) {
+  for (let dayCount = 0; dayCount < 7; dayCount++) {
     const newDate = new Date();
 
     newDate.setDate(newDate.getDate() - dayCount);
@@ -59,7 +59,8 @@ export type RawChartData = {
 };
 
 export async function getChartData(): Promise<RawChartData | null> {
-  const dates = generateDatesArray();
+  const dates = getLastWeekDates();
+
   const labels = dates.map(
     (date) =>
       `${formatDateOrMonth(date.getDate())}/${formatDateOrMonth(

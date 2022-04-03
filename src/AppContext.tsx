@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { RawChartData } from "./utilities/apiURL";
+import { RawChartData } from "./utilities/getData";
 import { Rate } from "./utilities/parser";
 
 type Context = {

@@ -8,7 +8,6 @@ const Select = styled.select`
   font-size: ${({ theme }) => theme.fonts.size[3]};
   padding: ${({ theme }) => theme.spacing[3]};
   outline-color: ${({ theme }) => theme.colors.highlight};
-  position: relative;
 `;
 
 export default Select;

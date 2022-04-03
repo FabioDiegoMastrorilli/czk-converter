@@ -15,7 +15,7 @@ import InputGroup from "./style/components/InputGroup.styled";
 import StyledLabel from "./style/components/Label.styled";
 import darkTheme from "./style/darkTheme";
 import defaultTheme from "./style/defaultTheme";
-import { getChartData, RawChartData } from "./utilities/apiURL";
+import { getChartData, RawChartData } from "./utilities/getData";
 import { Rate } from "./utilities/parser";
 
 function App() {
