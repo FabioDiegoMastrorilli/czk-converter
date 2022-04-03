@@ -7,7 +7,7 @@ const Select = styled.select`
   color: ${({ theme }) => theme.colors.text[2]};
   font-size: ${({ theme }) => theme.fonts.size[3]};
   padding: ${({ theme }) => theme.spacing[3]};
-  appearance: none;
+  outline-color: ${({ theme }) => theme.colors.highlight};
   position: relative;
 `;
 

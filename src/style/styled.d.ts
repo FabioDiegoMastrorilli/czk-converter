@@ -2,11 +2,16 @@ import "styled-components";
 
 declare module "styled-components" {
   export interface DefaultTheme {
+    breakpoints: {
+      md: string;
+    };
     dark: boolean;
     colors: {
       background: string;
       backgroundFocus: string;
       border: string;
+      danger: string;
+      highlight: string;
       text: {
         1: string;
         2: string;
@@ -21,6 +26,7 @@ declare module "styled-components" {
         1: string;
         2: string;
         3: string;
+        4: string;
       };
     };
     spacing: {

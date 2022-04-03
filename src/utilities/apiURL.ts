@@ -39,7 +39,7 @@ export async function getData(selectedDate: Date) {
 function generateDatesArray(max = 7) {
   const dates = [];
 
-  for(let dayCount = 0; dayCount < max; dayCount++) {
+  for (let dayCount = 0; dayCount < max; dayCount++) {
     const newDate = new Date();
 
     newDate.setDate(newDate.getDate() - dayCount);
@@ -47,18 +47,54 @@ function generateDatesArray(max = 7) {
     dates.push(newDate);
   }
 
-  return dates.reverse()
+  return dates.reverse();
 }
 
-export async function getDataset() {
-  const dates = generateDatesArray()
+export type RawChartData = {
+  labels: string[];
+  allDatasets: {
+    label: string;
+    data: number[];
+  }[];
+};
+
+export async function getChartData(): Promise<RawChartData | null> {
+  const dates = generateDatesArray();
+  const labels = dates.map(
+    (date) =>
+      `${formatDateOrMonth(date.getDate())}/${formatDateOrMonth(
+        date.getMonth() + 1
+      )}/${date.getFullYear()}`
+  );
 
   try {
-    const dataset = await Promise.all(dates.map(getData));
+    const partialDataset = new Map<string, number[]>();
 
-    console.log(dataset);
-    return dataset;
+    const allData = await Promise.all(
+      dates.map(async (date) => {
+        return await getData(date);
+      })
+    );
+
+    allData.forEach((dateData) => {
+      dateData.forEach((data) => {
+        const prevValues = partialDataset.get(data.currencyId);
+
+        partialDataset.set(data.currencyId, [
+          ...(prevValues || []),
+          1 / data.conversionRate,
+        ]);
+      });
+    });
+
+    return {
+      labels,
+      allDatasets: Array.from(partialDataset).map(([currencyId, data]) => ({
+        label: currencyId,
+        data,
+      })),
+    };
   } catch (error) {
-   return [] 
+    return null;
   }
 }

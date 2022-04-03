@@ -8,6 +8,7 @@ const Input = styled.input`
   font-size: ${({ theme }) => theme.fonts.size[3]};
   padding: ${({ theme }) => theme.spacing[3]};
   transition: background-color 0.1s ease-in;
+  outline-color: ${({ theme }) => theme.colors.highlight};
 
   &:focus {
     background-color: ${({ theme }) => theme.colors.backgroundFocus};

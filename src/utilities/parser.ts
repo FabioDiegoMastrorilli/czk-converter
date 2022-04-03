@@ -6,6 +6,12 @@ export type Rate = {
   quantity: number;
 };
 
+export function sortRates(rates: Rate[]) {
+  return rates.sort((firstRate, secondRate) =>
+    firstRate.currencyId > secondRate.currencyId ? 1 : -1
+  );
+}
+
 export function parseRawRatesResponse(rawRatesResponse: string) {
   const rawRatesDetails = rawRatesResponse.split(/\r?\n/);
 
@@ -42,5 +48,7 @@ export function parseRawRatesResponse(rawRatesResponse: string) {
     [] as Rate[]
   );
 
-  return parsedData;
+  const sortedData = sortRates(parsedData);
+
+  return sortedData;
 }

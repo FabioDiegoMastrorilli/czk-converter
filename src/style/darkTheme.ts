@@ -9,6 +9,8 @@ const darkTheme: DefaultTheme = {
     background: "#202124",
     backgroundFocus: "#2f3137",
     border: "#9aa0a6",
+    danger: "#ff7373",
+    highlight: "#ffd03f",
     text: {
       1: "#e8eaed",
       2: "#9aa0a6",

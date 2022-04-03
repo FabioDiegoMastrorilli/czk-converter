@@ -1,12 +1,15 @@
 import { createContext } from "react";
+import { RawChartData } from "./utilities/apiURL";
 import { Rate } from "./utilities/parser";
 
 type Context = {
-    selectedCurrency: Rate | null,
-    setSelectedCurrency: (value: Rate | null) => void;
-}
+  chartData: RawChartData | null;
+  selectedCurrency: Rate | null;
+  setSelectedCurrency: (value: Rate | null) => void;
+};
 
 export default createContext<Context>({
-    selectedCurrency: null,
-    setSelectedCurrency: () => {}
-})
+  chartData: null,
+  selectedCurrency: null,
+  setSelectedCurrency: () => {},
+});

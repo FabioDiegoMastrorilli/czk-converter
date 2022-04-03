@@ -3,7 +3,10 @@ import { useState } from "react";
 import { ThemeProvider } from "styled-components";
 import AppContext from "../../AppContext";
 import defaultTheme from "../../style/defaultTheme";
-import { DEFAULT_INITIAL_CZK_AMOUNT } from "../../utilities/constants";
+import {
+  DEFAULT_INITIAL_CZK_AMOUNT,
+  DEFAULT_SELECTED_CURRENCY_ID,
+} from "../../utilities/constants";
 import { Rate } from "../../utilities/parser";
 import Form from "../Form";
 
@@ -28,15 +31,18 @@ const FormWrapper = () => {
   const [selectedCurrency, setSelectedCurrency] = useState<Rate | null>(null);
 
   return (
-    <AppContext.Provider value={{
-      selectedCurrency,
-      setSelectedCurrency
-    }}>
+    <AppContext.Provider
+      value={{
+        chartData: null,
+        selectedCurrency,
+        setSelectedCurrency,
+      }}
+    >
       <ThemeProvider theme={defaultTheme}>
         <Form rates={rates} />
       </ThemeProvider>
     </AppContext.Provider>
-  )
+  );
 };
 
 describe("Form", () => {
@@ -58,35 +64,12 @@ describe("Form", () => {
     expect(Number(czkAmountInput.value)).toBe(DEFAULT_INITIAL_CZK_AMOUNT);
   });
 
-  it("must have the currencies select box initially unset", () => {
+  it(`must have the currencies select box initially set to ${DEFAULT_SELECTED_CURRENCY_ID}`, () => {
     render(<FormWrapper />);
 
     const currencySelect: HTMLSelectElement = screen.getByRole("combobox");
 
-    expect(currencySelect.value).toBe("");
-  });
-
-  it("must have the second input disabled when no currencies are selected", () => {
-    render(<FormWrapper />);
-
-    const selectedCurrencyAmountInput: HTMLInputElement = screen.getByTestId(
-      "selected-currency-amount"
-    );
-
-    expect(selectedCurrencyAmountInput.disabled).toBe(true);
-  });
-
-  it("must enable the second input when a currency is selected", () => {
-    render(<FormWrapper />);
-
-    const selectedCurrencyAmountInput: HTMLInputElement = screen.getByTestId(
-      "selected-currency-amount"
-    );
-    const currencySelect: HTMLSelectElement = screen.getByRole("combobox");
-
-    fireEvent.change(currencySelect, { target: { value: "EUR" } });
-
-    expect(selectedCurrencyAmountInput.disabled).toBe(false);
+    expect(currencySelect.value).toBe(DEFAULT_SELECTED_CURRENCY_ID);
   });
 
   describe("conversion", () => {

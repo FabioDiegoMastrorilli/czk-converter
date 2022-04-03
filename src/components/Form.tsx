@@ -1,9 +1,14 @@
-import { useContext, useState } from "react";
-import { DEFAULT_INITIAL_CZK_AMOUNT } from "../utilities/constants";
+import { useCallback, useContext, useEffect, useState } from "react";
+import {
+  DEFAULT_INITIAL_CZK_AMOUNT,
+  DEFAULT_SELECTED_CURRENCY_ID,
+} from "../utilities/constants";
 import { Rate } from "../utilities/parser";
 import StyledInput from "../style/components/Input.styled";
+import StyledLabel from "../style/components/Label.styled";
 import StyledSelect from "../style/components/Select.styled";
 import AppContext from "../AppContext";
+import InputGroup from "../style/components/InputGroup.styled";
 
 function getConvertedValue(
   defaultCurrencyAmount: number,
@@ -21,23 +26,17 @@ type FormProps = {
   rates?: Rate[];
 };
 
-export default function Form({ rates = [] }: FormProps) {
+export default function ConversionForm({ rates = [] }: FormProps) {
   const [czkCurrencyInputValue, setCzkCurrencyInputValue] = useState<string>(
     String(DEFAULT_INITIAL_CZK_AMOUNT)
   );
   const [selectedCurrencyInputValue, setSelectedCurrencyInputValue] =
-    useState<string>();
+    useState<string>("");
 
-  const {selectedCurrency, setSelectedCurrency} = useContext(AppContext);
+  const { selectedCurrency, setSelectedCurrency } = useContext(AppContext);
 
-  function handleSelectChangeEvent({
-    target: { value: currencyId },
-  }: React.ChangeEvent<HTMLSelectElement>) {
-    if (!currencyId) {
-      setSelectedCurrency(null);
-
-      setSelectedCurrencyInputValue("");
-    } else {
+  const onCurrencyChanged = useCallback(
+    (currencyId: string) => {
       const found = rates.find((rate) => rate.currencyId === currencyId);
 
       setSelectedCurrency(found || null);
@@ -45,7 +44,20 @@ export default function Form({ rates = [] }: FormProps) {
       setSelectedCurrencyInputValue(
         found ? getConvertedValue(Number(czkCurrencyInputValue), found) : ""
       );
+    },
+    [czkCurrencyInputValue, rates, setSelectedCurrency]
+  );
+
+  useEffect(() => {
+    if (!selectedCurrency) {
+      onCurrencyChanged(DEFAULT_SELECTED_CURRENCY_ID);
     }
+  }, [selectedCurrency, onCurrencyChanged]);
+
+  function handleSelectChangeEvent({
+    target: { value: currencyId },
+  }: React.ChangeEvent<HTMLSelectElement>) {
+    onCurrencyChanged(currencyId);
   }
 
   function handleInputChangeEvent(
@@ -73,37 +85,53 @@ export default function Form({ rates = [] }: FormProps) {
 
   return (
     <>
-      <StyledInput
-        aria-label="CZK amount"
-        data-testid="czk-amount"
-        onChange={(event) => handleInputChangeEvent(event, "first")}
-        value={czkCurrencyInputValue}
-        type="number"
-        required
-      />
+      <InputGroup bottomSpace>
+        <StyledLabel htmlFor="czk-amount">CZK Amount:</StyledLabel>
 
-      <StyledSelect
-        aria-label="Selected currency"
-        onChange={handleSelectChangeEvent}
-        value={selectedCurrency?.currencyId || ""}
-      >
-        <option value=""></option>
+        <StyledInput
+          id="czk-amount"
+          data-testid="czk-amount"
+          onChange={(event) => handleInputChangeEvent(event, "first")}
+          value={czkCurrencyInputValue}
+          type="number"
+          required
+        />
+      </InputGroup>
 
-        {rates.map((rate) => (
-          <option key={rate.currencyId} value={rate.currencyId}>
-            {`${rate.currencyId} (${rate.countryName})`}
-          </option>
-        ))}
-      </StyledSelect>
+      <InputGroup bottomSpace>
+        <StyledLabel htmlFor="selected-currency">
+          Selected Currency:
+        </StyledLabel>
 
-      <StyledInput
-        aria-label="Selected currency amount"
-        data-testid="selected-currency-amount"
-        disabled={!selectedCurrency}
-        onChange={(event) => handleInputChangeEvent(event, "second")}
-        value={selectedCurrencyInputValue}
-        type="text"
-      />
+        <StyledSelect
+          id="selected-currency"
+          onChange={handleSelectChangeEvent}
+          value={selectedCurrency?.currencyId || ""}
+        >
+          <option disabled value=""></option>
+
+          {rates.map((rate) => (
+            <option key={rate.currencyId} value={rate.currencyId}>
+              {`${rate.currencyId} (${rate.countryName})`}
+            </option>
+          ))}
+        </StyledSelect>
+      </InputGroup>
+
+      <InputGroup>
+        <StyledLabel htmlFor="selected-currency-amount">
+          Selected Currency Amount:
+        </StyledLabel>
+
+        <StyledInput
+          id="selected-currency-amount"
+          data-testid="selected-currency-amount"
+          disabled={!selectedCurrency}
+          onChange={(event) => handleInputChangeEvent(event, "second")}
+          value={selectedCurrencyInputValue}
+          type="text"
+        />
+      </InputGroup>
     </>
   );
 }
