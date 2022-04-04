@@ -1,46 +1,44 @@
-# Getting Started with Create React App
+# Currencies converter
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Please run `npm install` and `npm run start` to see the converter in action.
 
-## Available Scripts
+## <Form \/> flowchart
 
-In the project directory, you can run:
+Handling the bidirectional conversion with `useEffect` would have generated undesired and low performant rerenderings.
 
-### `npm start`
+I then decided to handle conversions manually in the inputs and select event handlers. 
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Here's what happens within the `Form` Component.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+```mermaid
+graph TB;
+    I1([1st input change event triggered]) -- onChange --> IEH[inputs events handler]
 
-### `npm test`
+    I2([2nd input change event triggered]) -- onChange --> IEH
+    
+    IEH --> TISU[triggered input state updated] --> TIU[triggered input value updated]
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+    IEH --> C[Converter]
+    
+    C --> TAISU[targeted input state updated with converted value] --> TAIU[targeted input value updated]
+    
+    CS([currencies select change event triggered]) -- onChange --> SEH[select event handler]
 
-### `npm run build`
+    SEH[select event handler] --> C
+    
+    SEH[select event handler] --> SISU[select state updated] --> SVU[select value updated]
+    
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Personal notes and concerns
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+A mono-directional converter would have looked poor, so I made the conversion bidirectional and added a chart. 
 
-### `npm run eject`
+I also created two themes that will be enabled based on the system preferences (dark/light mode)
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+---
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Unfortunately `react queries` was not compatible with the latest `create react app` stable version, so I created a custom hook (`useRate`) to handle data fetch;
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+I then anyway downgraded `react script`, `react` and `react-dom` due to the current lack of compatibility from vendors.
