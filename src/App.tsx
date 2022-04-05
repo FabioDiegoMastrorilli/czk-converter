@@ -52,7 +52,7 @@ function App() {
 
           <div className="grid-form">
             <InputGroup bottomSpace>
-              <StyledLabel htmlFor="date">Please select a date</StyledLabel>
+              <StyledLabel htmlFor="date">Conversion rate date:</StyledLabel>
 
               <StyledInput
                 id="date"

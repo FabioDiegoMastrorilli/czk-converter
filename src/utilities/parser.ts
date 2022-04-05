@@ -17,7 +17,7 @@ export function parseRawRatesResponse(rawRatesResponse: string) {
 
   rawRatesDetails.splice(0, 2);
 
-  const parsedData: Rate[] = rawRatesDetails.reduce(
+  const parsedData = rawRatesDetails.reduce(
     (formattedDetails, rawRateDetails) => {
       if (!rawRateDetails.length) {
         return formattedDetails;

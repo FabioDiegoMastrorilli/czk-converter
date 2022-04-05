@@ -1,6 +1,6 @@
 {
   "author": "Fabio Diego Mastrorilli <fdmastrorilli@gmail.com>",
-  "name": "momence-test",
+  "name": "czk-converter",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -19,7 +19,6 @@
     "react-chartjs-2": "^4.0.1",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
-    "recharts": "^2.1.9",
     "styled-components": "^5.3.5",
     "typescript": "^4.6.3",
     "web-vitals": "^2.1.4"
